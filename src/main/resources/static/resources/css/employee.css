@@ -1,0 +1,74 @@
+body{
+    background-image: url(../images/bg.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.title-div{
+    padding: 30px;
+    height: 100px;
+    background-color: rgba(112, 234, 167, 0.608);
+    border-radius: 10px;
+}
+
+.form-area{
+    background-color: rgba(242, 242, 242, 0.3);
+    border-radius: 10px;
+    border: 2px solid black;
+}
+
+.table-area{
+    background-color: rgba(242, 242, 242, 0.3);
+    border-radius: 10px;
+    border: 2px solid black;
+}
+
+.table{
+    border-radius: 10px;
+}
+
+.estatus-working{
+    padding: 5px;
+    background-color: rgb(49, 255, 49);
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.estatus-resign{
+    padding: 5px;
+    background-color: rgb(255, 231, 49);
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.card{
+    background-color: rgba(242, 242, 242, 0.3);
+}
+
+.working-status{
+    color: white;
+    background-color: green;
+    padding: 2px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.resign-status{
+    background-color: yellow;
+    padding: 2px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.delete-status{
+    color: white;
+    background-color: red;
+    padding: 2px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px;
+}

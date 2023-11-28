@@ -43,20 +43,8 @@ const refreshTable = ()=>{
             empStatus_id:{id:3,name:'Deleted'},abc:null},
     ];*/
     
-    employees = [];
-    $.ajax('/employee/findall',{
-		async : false,
-		type : 'GET',
-		dataType : 'json',
-		success : function(data,status,ahr){
-			console.log(data);
-			console.log("success "+status+" "+ahr);	
-			employees = data;
-		},
-		error : function(errormsg, status,ahr){
-			console.log("failed  "+errormsg+" "+status+" "+ahr);			
-		}
-	});
+    employees = ajaxGetRequest("/employee/findall");
+    
 
     //object count = table column count
     //String - number/string/date
@@ -92,12 +80,14 @@ const refreshEmployeeForm = ()=>{
     employee = {};
 
     //get data list from select element
-    designations = [{id:1,name:'Manager'},{id:2,name:'Cashier'},{id:3,name:'Store-Manager'}];
+    // designations = [{id:1,name:'Manager'},{id:2,name:'Cashier'},{id:3,name:'Store-Manager'}];
 
+    designations = ajaxGetRequest("/designation/findall");
     fillDataIntoSelect(cmbDesignation,'Select Designation',designations,'name');
     
-    employeestatuses = [{id:1,name:'Working'},{id:2,name:'Resign'},{id:3,name:'Deleted'}];
+    // employeestatuses = [{id:1,name:'Working'},{id:2,name:'Resign'},{id:3,name:'Deleted'}];
 
+    employeestatuses = ajaxGetRequest("/employeestatus/findall");
     fillDataIntoSelect(cmbEmployeeStatus,'Select status',employeestatuses,'name');
 
     //need to empty all elements
@@ -363,7 +353,78 @@ const buttonEmployeeUpdate = () => {
     }
 }
 
-//create print function
-const printEmployee=(rowId)=>{
 
+//create print function
+const printEmployee=(ob,rowId)=>{
+
+    //need to get full object
+    const printEmp = ob;
+
+    for(let i = 0; i < tblEmployee.children[1].children.length ; i++){
+        tblEmployee.children[1].children[i].style.backgroundColor = 'white';
+    }
+    tblEmployee.children[1].children[rowId].style.backgroundColor = 'red';
+
+    //option 01
+    tdFullName.innerText = printEmp.fullName;
+    tdNIC.innerText = printEmp.nic;
+    tdMobile.innerText = printEmp.mobile;
+    tdStatus.innerText = printEmp.employeeStatusId.name;
+
+    // newTab = window.open();
+    // newTab.document.write(
+    //     //  link bootstrap css 
+    //     '<head><title>Print Employee</title>'+
+    //     '<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" /></head>'+
+    //     '<h2>Employee Details</h2>'+
+    //     printEmployeeTable.outerHTML
+    //     +'<script>printEmployeeTable.removeAttribute("style")</script>'
+    // );
+
+    // setTimeout(
+    //     function(){
+    //         newTab.print();
+    //     },1000)
+
+    //option 02
+    $('#modalPrintEmployee').modal('show');
+}
+
+//function for print option 02
+const printEmpTable = ()=>{
+    newTab = window.open();
+    newTab.document.write(
+        //  link bootstrap css 
+        '<head><title>Print Employee</title>'+
+        '<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" /></head>'+
+        '<h2>Employee Details</h2>'+
+        printEmployeeTable.outerHTML
+    );
+
+    //triger print() after time out
+    setTimeout(
+        function(){
+            newTab.print();
+        },1000)
+
+}
+
+//create funtion for print employee table after 1000 milsec of new tab opening () - to refresh the new tab elements
+const printEmpFullTable=()=>{
+    const newTab = window.open();
+    newTab.document.write(
+        //  link bootstrap css 
+        '<head><title>Print Employee</title>'+
+        '<script src="resources/js/jquery.js"></script>'+
+        '<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" /></head>'+
+        '<h2>Employee Details</h2>'+
+        tblEmployee.outerHTML+
+        '<script>$(".modify-button").css("display","none")</script>'
+    );
+
+    setTimeout(
+        function(){
+            newTab.print();
+        },1000)
+    
 }

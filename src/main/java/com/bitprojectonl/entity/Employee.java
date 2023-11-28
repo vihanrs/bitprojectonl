@@ -1,4 +1,4 @@
-package com.bitprojectonl;
+package com.bitprojectonl.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,7 @@ public class Employee {
 
     @Column(name = "fullname")
     @NotNull
+//    @Pattern(regexp = "", message = "") using for string validations
     private String fullName;
 
     @Column(name = "callingname")
@@ -85,7 +87,7 @@ public class Employee {
     @Column(name = "lastmodifydatetime")
     private LocalDateTime lastModifyDateTime;
 
-    @Column(name = "deletedatetime")
+    @Column(name = "deleteddatetime")
     private LocalDateTime deleteDateTime;
 
     @ManyToOne //relationship formate

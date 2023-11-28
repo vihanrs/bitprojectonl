@@ -1,4 +1,4 @@
-package com.bitprojectonl;
+package com.bitprojectonl.controller;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.bitprojectonl.dao.EmployeeDao;
+import com.bitprojectonl.dao.EmployeeStatusDao;
+import com.bitprojectonl.entity.Designation;
+import com.bitprojectonl.entity.Employee;
 
 @RestController
 public class EmployeeController {
@@ -53,7 +58,6 @@ public class EmployeeController {
 	public String save(@RequestBody Employee employee) {
 		try {
 			//check unique value
-			
 			Employee extEmployeeMobileNo = employeeDao.getEmployeeByMobile(employee.getMobile());
 			if(extEmployeeMobileNo != null) {
 				return "Save not Completed : Mobile No Alrady Exist";

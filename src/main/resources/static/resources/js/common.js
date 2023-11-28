@@ -1,4 +1,23 @@
+//define function for ajax request (GET)
+const ajaxGetRequest=(url) =>{
+    let serverResponse;
+    $.ajax(url,{
+		async : false,
+		type : 'GET',
+		dataType : 'json',
+		success : function(data,status,ahr){
+			console.log(data);
+			console.log("success "+url+" "+status+" "+ahr);	
+			serverResponse = data;
+		},
+		error : function(errormsg, status,ahr){
+			console.log("failed "+url+" "+errormsg+" "+status+" "+ahr);
 
+            serverResponse = [];			
+		}
+	});
+    return serverResponse;
+}
 // define function for ajax request (POST,PUT,DELETE)
 const ajaxRequestBody = (url,method,object) =>{
     let serverResponse;

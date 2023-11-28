@@ -43,13 +43,15 @@ const selectDFieldValidator = (fieldId,object,property)=>{
     }
 }
 
-const selectFieldValidator = (fieldId,pattern)=>{
+const selectFieldValidator = (fieldId,object,property)=>{
     const fieldValue = fieldId.value;
 
     if(fieldValue !== ""){
         fieldId.style.border = '2px solid green';
+        window[object][property] = fieldValue;
     }else{
         fieldId.style.border = '1px solid #ced4da';
+        window[object][property] = null;
     }
 }
 
@@ -146,7 +148,8 @@ const radioFieldValidator = (fieldId,object,property)=>{
         window[object][property] = fieldValue;
     }else{
         //need to bind null
-        window[object][property] = null;
+        //window[object][property] = null;
+        window[object][property] = fieldValue;
     }
 }
 

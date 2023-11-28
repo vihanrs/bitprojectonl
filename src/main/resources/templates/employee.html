@@ -15,8 +15,9 @@
     <link rel="stylesheet" href="resources/fontawesome-6.4.2/css/all.css" />
 
     <!-- employee css -->
-    <!-- linking with thymeleaf -->
-    <link rel="stylesheet" th:href="@{resources/css/employee.css}" />
+    <!-- linking with thymeleaf   th:src = @{}  /   th:href = @{} --> 
+    <!-- <link rel="stylesheet" th:href="@{resources/css/employee.css}" /> -->
+    <link rel="stylesheet" href="resources/css/employee.css" />
     <!-- button css -->
     <link rel="stylesheet" href="resources/css/button.css" />
 
@@ -182,7 +183,7 @@
                                     Date of Birth : <span class="text-danger"> * </span>
                                 </label>
                                 <input type="date" id="dateDOB" class="form-control " required
-                                onchange="dateFieldValidator(dateDOB,'employee','dob')">
+                                onchange="dateFieldValidator(dateDOB,'employee','dateOfBirth')">
                             </div>
                         </div>
     
@@ -233,7 +234,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-floating">
-                                    <textarea id="txtNote" class="form-control" placeholder="Enter NOte Here" required
+                                    <textarea id="txtNote" class="form-control" placeholder="Enter Note Here" required
                                     onkeyup="textFieldValidator(txtNote,'^.*$','employee','note');"></textarea>
                                     <label for="txtNote" class="form-label fw-bold">
                                         Note : <span class="text-danger"> (optional) </span>
@@ -248,7 +249,7 @@
                                 <label for="cmbDesignation" class="form-label fw-bold">
                                     Designation : <span class="text-danger"> * </span>
                                 </label>
-                                <select id="cmbDesignation" class="form-select" required onchange="selectDFieldValidator(cmbDesignation,'employee','designation_id')">
+                                <select id="cmbDesignation" class="form-select" required onchange="selectDFieldValidator(cmbDesignation,'employee','designationId')">
                                     <option value="" selected disabled>Select Designation</option>
                                     <option value="Manager">Manager</option>
                                     <option value="Cashier">Cashier</option>
@@ -258,7 +259,7 @@
                                 <label for="cmbCivilstatus" class="form-label fw-bold">
                                     Civilstatus : <span class="text-danger"> * </span>
                                 </label>
-                                <select id="cmbCivilstatus" class="form-select" required onchange="selectFieldValidator(cmbCivilstatus,'employee','civilstatus')">
+                                <select id="cmbCivilstatus" class="form-select" required onchange="selectFieldValidator(cmbCivilstatus,'employee','civilStatus')">
                                     <option value="" selected disabled>Select Civilstatus</option>
                                     <option value="Single">Single</option>
                                     <option value="Married">Married</option>
@@ -268,7 +269,7 @@
                                 <label for="cmbEmployeeStatus" class="form-label fw-bold">
                                     Employee Status : <span class="text-danger"> * </span>
                                 </label>
-                                <select id="cmbEmployeeStatus" class="form-select" required onchange="selectDFieldValidator(cmbEmployeeStatus,'employee','employeeStatus_id')">
+                                <select id="cmbEmployeeStatus" class="form-select" required onchange="selectDFieldValidator(cmbEmployeeStatus,'employee','employeeStatusId')">
                                     <option value=""  disabled>Select Employee Status</option>
                                     <option value="Working" selected>Working</option>
                                     <option value="Resign">Resign</option>
@@ -283,7 +284,7 @@
                                 <button type="reset" class="btn fw-bold btn-clear"><i class="fa-solid fa-recycle me-2"></i>Clear</button>
                             </div>
                             <div class="col-8 text-end">
-                                <button type="submit" class="btn me-2 fw-bold btn-update"><i class="fa-solid fa-gears me-2"></i>Update</button>
+                                <button type="submit" class="btn me-2 fw-bold btn-update" onclick="buttonEmployeeUpdate()"><i class="fa-solid fa-gears me-2"></i>Update</button>
                                 <button type="submit" class="btn fw-bold btn-add" onclick="addEmployee()"><i class="fa-solid fa-square-plus me-2"></i>Add</button>
                             </div>
                         </div>

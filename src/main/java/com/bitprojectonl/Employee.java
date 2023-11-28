@@ -27,7 +27,6 @@ public class Employee {
     @Id //for primary key -PK
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto generated id - AI
     @Column(name = "id", unique = true) // for map with column
-    @NotNull
     private Integer id;
 
     @Column(name = "empno", unique = true)
@@ -57,7 +56,7 @@ public class Employee {
     @Length(max = 10)
     private String mobile;
 
-    @Column(name = "land_no")
+    @Column(name = "landno")
     private String landNo;
 
     @Column(name = "address")

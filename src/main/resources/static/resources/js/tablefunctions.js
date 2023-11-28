@@ -34,7 +34,7 @@ const fillDataIntoTable=(tableID,dataList,displayProperty,editButtonFunction,del
 
         buttonEdit.onclick = () =>{
             console.log("Edit Event" + item.id);
-            editButtonFunction(ind);
+            editButtonFunction(item,ind);
         }
 
         const buttonDelete = document.createElement('button');
@@ -43,7 +43,7 @@ const fillDataIntoTable=(tableID,dataList,displayProperty,editButtonFunction,del
         
         buttonDelete.onclick = () =>{
             // console.log("Delete Event" + item.id);
-            deleteButtonFunction(ind);
+            deleteButtonFunction(item,ind);
         }
         
         const buttonPrint = document.createElement('button');
@@ -52,7 +52,7 @@ const fillDataIntoTable=(tableID,dataList,displayProperty,editButtonFunction,del
         
         buttonPrint.onclick = () =>{
             console.log("Print Event" + item.id);
-            printButtonFunction(ind);
+            printButtonFunction(item,ind);
         }
 
         if(buttonVisibility){

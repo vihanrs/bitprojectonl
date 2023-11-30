@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Management 3 | BIT Project 2023</title>
-    <link rel="icon" href="icons.png">
+    <link rel="icon" href="../images/icons.png">
 
     <!-- link bootstrap css -->
     <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" />
@@ -57,6 +57,135 @@
       <div class="row mt-2">
         <!-- form area start -->
         <div class="col-5">
+            <form onsubmit="return false" id="userForm">
+                <!-- Required Mark -->
+                <div class="row mt-2">
+                    <div class="col-12 text-start">
+                        <span style="color:red;" class="fw-bold">* <span style="color:black;">Required</span></span>
+                    </div>
+                </div>
+
+                <!-- employee -->
+                <div class="row mt-2">
+                    <div class="input-group">
+                        <span class="input-group-text col-5">
+                            <label for="selectEmployee" class="fw-bold">
+                                Employee <span style="color: red;">*</span> :
+                                <i class="fa-light fa-question fa-flip fa-xs" style="color: red;" 
+                                data-bs-toggle="tooltip" data-bs-title="Select Employee" data-bs-placement="bottom"></i>
+                            </label>
+                        </span>
+                        <select id="selectEmployee" class="form-select" required onchange="selectDFieldValidator(this,'user','employeeId')"></select>
+                    </div>
+                </div>
+
+                <!-- username -->
+                <div class="row mt-2">
+                    <div class="input-group">
+                        <span class="input-group-text col-5">
+                            <label for="textUserName" class="fw-bold">
+                                Username <span style="color: red;">*</span> :
+                                <i class="fa-light fa-question fa-flip fa-xs" style="color: red;" 
+                                data-bs-toggle="tooltip" data-bs-title="Enter Username" data-bs-placement="bottom"></i>
+                            </label>
+                        </span>
+                        <input type="text" class="form-control" id="textUserName" placeholder="Enter Username" required onkeyup="textFieldValidator(this,'^[a-zA-Z0-9]{5,16}$','user','userName')">
+                    </div>
+                </div>
+
+                <!-- password -->
+                <div class="row mt-2">
+                    <div class="input-group">
+                        <span class="input-group-text col-5">
+                            <label for="textPassword" class="fw-bold">
+                                Password <span style="color: red;">*</span> :
+                                <i class="fa-light fa-question fa-flip fa-xs" style="color: red;" 
+                                data-bs-toggle="tooltip" data-bs-title="Enter Password" data-bs-placement="bottom"></i>
+                            </label>
+                        </span>
+                        <input type="password" class="form-control" id="textPassword" placeholder="Enter Password" required onkeyup="textFieldValidator(this,'^[a-zA-Z0-9]{5,16}$','user','password')">
+                    </div>
+                </div>
+
+                <!-- password re-enter -->
+                <div class="row mt-2">
+                    <div class="input-group">
+                        <span class="input-group-text col-5">
+                            <label for="textRTPassword" class="fw-bold">
+                                Password Re-Type <span style="color: red;">*</span> :
+                                <i class="fa-light fa-question fa-flip fa-xs" style="color: red;" 
+                                data-bs-toggle="tooltip" data-bs-title="Re-Type Password" data-bs-placement="bottom"></i>
+                            </label>
+                        </span>
+                        <input type="password" class="form-control" id="textRTPassword" placeholder="Re-Type Password" required onkeyup="passwordRTValidator()">
+                    </div>
+                </div>
+
+                <!-- email -->
+                <div class="row mt-2">
+                    <div class="input-group">
+                        <span class="input-group-text col-5">
+                            <label for="textStatus" class="fw-bold">
+                                Email <span style="color: red;">*</span> :
+                                <i class="fa-light fa-question fa-flip fa-xs" style="color: red;" 
+                                data-bs-toggle="tooltip" data-bs-title="Enter Email" data-bs-placement="bottom"></i>
+                            </label>
+                        </span>
+                        <input type="text" class="form-control" id="textEmail" placeholder="Enter Email" required onkeyup="textFieldValidator(this,'^[A-Za-z0-9]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','user','email')">
+                    </div>
+                </div>
+
+                <!-- roles -->
+                <div class="row mt-2">
+                    <label for="divRoles" class="fw-bold ms-2">User Roles</label>
+                    <div class="col-12" id="divRoles">
+
+                    </div>
+                </div>
+
+                <!-- status -->
+                <div class="row mt-2">
+                    <div class="input-group">
+                        <span class="input-group-text col-5">
+                            <label for="chkUserStatus" class="fw-bold">
+                                User Status <span style="color: red;">*</span> :
+                                <i class="fa-light fa-question fa-flip fa-xs" style="color: red;" 
+                                data-bs-toggle="tooltip" data-bs-title="Check User Status" data-bs-placement="bottom"></i>
+                            </label>
+                        </span>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="chkUserStatus" checked onchange="checkBoxValidator(this,'user','status',true,false,chkLblUserStatus,'User Account is Active','User Account is Not-Active')">
+                            <label class="form-check-label fw-bold" id="chkLblUserStatus" for="chkUserStatus">User Account is Active</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- note -->
+                <div class="row mt-2">
+                    <div class="input-group">
+                        <span class="input-group-text col-5">
+                            <label for="textNote" class="fw-bold">
+                                Note <span style="color: red;">*</span> :
+                                <i class="fa-light fa-question fa-flip fa-xs" style="color: red;" 
+                                data-bs-toggle="tooltip" data-bs-title="Enter Note" data-bs-placement="bottom"></i>
+                            </label>
+                        </span>
+                        <textarea class="form-control" id="textNote" placeholder="Enter Note" onkeyup="textFieldValidator(this,'^.*$','user','note')"></textarea>
+                    </div>
+                </div>
+
+                <!-- buttons -->
+                <div class="row mt-2">
+                    <div class="col-4 text-start">
+                        <button type="reset" class="btn fw-bold btn-clear" style="width: 65%;"><i class="fa-solid fa-recycle"></i> Reset </button>
+                    </div>
+                    <div class="col-8 text-end">
+                        <button type="submit" class="btn fw-bold btn-update"><i class="fa-solid fa-gears"></i> Update </button>
+                        <button type="submit" class="btn fw-bold btn-add" onclick="buttonUserSubmit()"><i class="fa-solid fa-square-plus"></i> Add</button>
+                    </div>
+                </div>
+
+            </form>
         <!-- form area end -->
         </div>
         <!-- table area start -->

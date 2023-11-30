@@ -1,13 +1,17 @@
 package com.bitprojectonl.entity;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -29,7 +33,7 @@ public class User {
 	
 	@Column(name = "username",unique = true)
 	@NotNull
-	private String username;
+	private String userName;
 	
 	@Column(name = "password")
 	@NotNull
@@ -56,4 +60,8 @@ public class User {
 	@ManyToOne   //(optional = true) for optional FK
 	@JoinColumn(name = "employee_id", referencedColumnName = "id")
 	private Employee employeeId;
+	
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(name = "user_has_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles;
 }

@@ -1,5 +1,7 @@
 package com.bitprojectonl.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +27,8 @@ public interface EmployeeDao extends JpaRepository<Employee,Integer>{
 	
 	//define query for get employee by given email
 	public Employee findByEmailEquals(String email);
+	
+	//define query for get Employee List without user account
+	@Query(value = "Select e from Employee e where e.id not in (select u.employeeId from User u)")
+	public List<Employee> getEmployeeListWithoutUserAcoount();
 }

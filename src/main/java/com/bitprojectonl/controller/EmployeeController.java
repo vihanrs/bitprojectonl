@@ -46,6 +46,12 @@ public class EmployeeController {
 		return modelAndView;
 	}
 
+	//create get mapping for get employee list without user account
+	@GetMapping(value = "/employee/listwithoutuseraccount", produces = "application/json")
+	public List<Employee> getEmployeeListWithoutUserAcoount(){
+		return employeeDao.getEmployeeListWithoutUserAcoount();
+	}
+	
 	// create get mapping for get employee all data -- [/employee/findall]
 	@GetMapping(value = "/employee/findall", produces = "application/json")
 	public List<Employee> findAll() {

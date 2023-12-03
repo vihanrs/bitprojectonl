@@ -35,7 +35,7 @@ const refreshUserTable = () => {
 
   //call fill data into table
   //(tableid,datalist,propertylist)
-  fillDataIntoTable2(tblUser,users,displayPropertyList,userFormRefill,userDelete,userPrint,true);
+  fillDataIntoTable2(tblUser,users,displayPropertyList,userFormRefill,userDelete,printUser,true);
 
   //call jquery data table
   $("#tblUser").dataTable();
@@ -67,40 +67,87 @@ const getUserStatus = (ob) => {
 };
 
 //function for refill user form
-const userFormRefill = (ob, rowIndex) => {};
+const userFormRefill = (ob, rowIndex) => {
+
+  console.log("refill");
+
+  user = JSON.parse(JSON.stringify(ob));
+  oldUser = JSON.parse(JSON.stringify(ob));
+
+  textUserName.value = user.userName;
+  textEmail.value = user.email;
+  textNote.value = user.note;
+
+  if(user.status){
+    chkUserStatus.checked= true;
+  }else{
+    chkUserStatus.checked= false;
+  }
+  
+  //need to set roles
+  roles = ajaxGetRequest("/role/list");
+  divRoles.innerHTML = "";
+  roles.forEach(role => {
+      const div = document.createElement('div');
+      div.className = "form-check form-check-inline";
+      const inputCHK = document.createElement('input');
+      inputCHK.type = "checkbox";
+      inputCHK.className = "form-check-input";
+      inputCHK.id = "chk"+role.name;
+
+      inputCHK.onchange = function(){
+          if(this.checked){
+              user.roles.push(role);
+          }else{
+              let extIndex = user.roles.map(item => item.name).indexOf(role.name);
+              if(extIndex != -1){
+                 user.roles.splice(extIndex,1);
+              }
+          }
+      }
+
+      let extUserRoleIndex = user.roles.map(item => item.name).indexOf(role.name);
+      if(extUserRoleIndex != -1){
+        inputCHK.checked =true;
+      }
+
+      const label = document.createElement('label');
+      label.className = "form-check-label fw-bold";
+      label.for = inputCHK.id;
+      label.innerText = role.name;
+
+      div.appendChild(inputCHK);
+      div.appendChild(label);
+
+      divRoles.appendChild(div);
+  });
+};
 
 //function for delete user
 const userDelete = (ob, rowIndex) => {
   const userConfirm = confirm(
     "Are you sure to delete following user account \n" +
-      "\n Employee is : " +
-      ob.employee_id.fullName +
-      "\n User Name is : " +
-      ob.username +
-      "\n email is : " +
-      ob.email
+      "\n Employee is : " + ob.employeeId.fullName +
+      "\n User Name is : " + ob.userName +
+      "\n email is : " +ob.email
   );
 
   if (userConfirm) {
     //request delete service
-    const deleteServerResponse = "ok";
-    if (deleteServerResponse == "ok") {
+    const deleteServerResponse = ajaxRequestBody("/user","DELETE",ob);
+    if (deleteServerResponse == "OK") {
       alert("User Delete Successfully...!");
       refreshUserTable();
     } else {
       alert(
-        "User Delete Not Successfully you have following errors \n " +
-          deleteServerResponse
-      );
+        "User Delete Not Successfully you have following errors \n " +deleteServerResponse);
     }
   }
 };
 
-//function for print user record
-const userPrint = (ob, rowIndex) => {};
-
 //function for refresh user form
 const refreshUserForm = () => {
+    userForm.reset();
     //create new object for call user
     user = new Object();
 
@@ -135,7 +182,10 @@ const refreshUserForm = () => {
             if(this.checked){
                 user.roles.push(role);
             }else{
-                
+                let extIndex = user.roles.map(item => item.name).indexOf(role.name);
+                if(extIndex != -1){
+                   user.roles.splice(extIndex,1);
+                }
             }
         }
 
@@ -215,7 +265,6 @@ const buttonUserSubmit=()=>{
             if(userPostServiceResponse == "OK"){
                 alert("Save Successfully..!");
                 refreshUserTable();
-                userForm.reset();
                 refreshUserForm();
             }else{
                 alert("Form has errors..\n"+userPostServiceResponse);
@@ -228,4 +277,78 @@ const buttonUserSubmit=()=>{
     
 
     
+}
+
+//create print function
+const printUser=(ob,rowId)=>{
+
+  //need to get full object
+  const printUser = ob;
+
+  for(let i = 0; i < tblUser.children[1].children.length ; i++){
+    tblUser.children[1].children[i].style.backgroundColor = 'white';
+  }
+  tblUser.children[1].children[rowId].style.backgroundColor = 'red';
+
+  //option 01
+  tdFullName.innerText = printUser.employeeId.fullName;
+  tdUserName.innerText = printUser.userName;
+  tdEmail.innerText = printUser.email;
+
+  // newTab = window.open();
+  // newTab.document.write(
+  //     //  link bootstrap css 
+  //     '<head><title>Print Employee</title>'+
+  //     '<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" /></head>'+
+  //     '<h2>Employee Details</h2>'+
+  //     printEmployeeTable.outerHTML
+  //     +'<script>printEmployeeTable.removeAttribute("style")</script>'
+  // );
+
+  // setTimeout(
+  //     function(){
+  //         newTab.print();
+  //     },1000)
+
+  //option 02
+  $('#modalPrintUser').modal('show');
+}
+
+//function for print option 02
+const printUsersTable = ()=>{
+  newTab = window.open();
+  newTab.document.write(
+      //  link bootstrap css 
+      '<head><title>Print User</title>'+
+      '<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" /></head>'+
+      '<h2>Employee Details</h2>'+
+      printUserTable.outerHTML
+  );
+
+  //triger print() after time out
+  setTimeout(
+      function(){
+          newTab.print();
+      },1000)
+
+}
+
+//create funtion for print user table after 1000 milsec of new tab opening () - to refresh the new tab elements
+const printUserFullTable=()=>{
+  const newTab = window.open();
+  newTab.document.write(
+      //  link bootstrap css 
+      '<head><title>Print User</title>'+
+      '<script src="resources/js/jquery.js"></script>'+
+      '<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" /></head>'+
+      '<h2>Employee Details</h2>'+
+      tblUser.outerHTML+
+      '<script>$(".modify-button").css("display","none")</script>'
+  );
+
+  setTimeout(
+      function(){
+          newTab.print();
+      },1000)
+  
 }

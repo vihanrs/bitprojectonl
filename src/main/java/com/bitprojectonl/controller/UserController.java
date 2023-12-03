@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +43,21 @@ public class UserController {
 	public String saveUser(@RequestBody User user) {
 		
 		//check duplicate email,user name,employee
+		User extUser = userDao.getUserByUserName(user.getUserName());
+		if(extUser != null) {
+			return "User Save Not Completed : username "+user.getUserName()+" allready ext! ";
+		}
+		
+		extUser = userDao.getUserByEmail(user.getEmail());
+		if(extUser != null) {
+			return "User Save Not Completed : email "+user.getEmail()+" allready ext! ";
+		}
+		
+		extUser = userDao.getUserByEmployee(user.getEmployeeId().getId());
+		if(extUser != null) {
+			return "User Save Not Completed : given employee allready ext! ";
+		}
+		
 		try {
 			//set added date time
 			user.setAddedDateTime(LocalDateTime.now());
@@ -49,6 +65,25 @@ public class UserController {
 			return "OK";
 		} catch (Exception e) {
 			return "User Save Not Completed : "+e.getMessage();
+		}
+	}
+	
+	//create delete mapping for delete user account [/user]
+	@DeleteMapping
+	public String deleteUser(@RequestBody User user) {
+		
+		//need to check given user ext or not
+		User extUser = userDao.getReferenceById(user.getId());
+		if(extUser == null) {
+			return "User Delete Not Completed : Given User Not Ext..!";
+		}
+		
+		try {
+			user.setStatus(false);  //change user status to inactive
+			userDao.save(user);
+			return "OK";
+		} catch (Exception e) {
+			return "User Delete Not Completed : "+e.getMessage();
 		}
 	}
 	

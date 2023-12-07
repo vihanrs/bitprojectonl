@@ -80,9 +80,15 @@ const userFormRefill = (ob, rowIndex) => {
 
   if(user.status){
     chkUserStatus.checked= true;
+    chkLblUserStatus.innerText = 'User Account is Active';
   }else{
     chkUserStatus.checked= false;
+    chkLblUserStatus.innerText = 'User Account is Not-Active';
   }
+
+  //add selected employee object (user.employeeId) to the the priviously created list
+  employeeListWithoutUserAccount.push(user.employeeId); 
+  fillDataIntoSelect(selectEmployee,'Select Employee',employeeListWithoutUserAccount,'fullName',user.employeeId.fullName);
   
   //need to set roles
   roles = ajaxGetRequest("/role/list");
@@ -150,6 +156,9 @@ const refreshUserForm = () => {
     userForm.reset();
     //create new object for call user
     user = new Object();
+    oldUser = null;
+
+    user.roles = new Array();
 
     //employee list without user account
     employeeListWithoutUserAccount = ajaxGetRequest("/employee/listwithoutuseraccount");
@@ -157,7 +166,6 @@ const refreshUserForm = () => {
 
     //set auto binding
     user.status = true;
-    user.roles = new Array();
 
     //set default color
     selectEmployee.style.border = "2px solid #ced4da";
@@ -178,6 +186,7 @@ const refreshUserForm = () => {
         inputCHK.className = "form-check-input";
         inputCHK.id = "chk"+role.name;
 
+        //set onchange event listner
         inputCHK.onchange = function(){
             if(this.checked){
                 user.roles.push(role);
@@ -233,14 +242,57 @@ const checkUserForm=()=>{
     if(user.password == null){
         errors = errors+"Please Enter Password.! \n";
     }
-    if(textPassword.value == ''){
+
+    //check only entering new record
+    if(oldUser == null){
+      if(textRTPassword.value == ''){
         errors = errors+"Please Enter Re-Type Password.! \n";
+      }
     }
+    
     if(user.email == null){
         errors = errors+"Please Enter Email.! \n";
     }
 
     return errors;
+}
+
+//define function for check form updates
+const checkUserFormUpdates=()=>{
+  let updates = '';
+  if(user.userName != oldUser.userName){
+    updates += 'Username is changed \n';
+  }
+
+  if(user.email != oldUser.email){
+    updates += 'Email is changed '+oldUser.email+' into '+user.email+ '\n';
+  }
+
+  if(user.employeeId.id != oldUser.employeeId.id){
+    updates += 'Employee is changed \n';
+  }
+
+  if(user.status != oldUser.status){
+    updates += 'Status is changed \n';
+  }
+
+  let isRolesUpdated = false;
+  user.roles.forEach(role => {
+    oldUser.roles.forEach(oldRole => {
+      if(role.id != oldRole.id){
+        isRolesUpdated = true;
+      }
+    });
+  });
+
+  // let isRolesUpdated = user.roles.some(role => !oldUser.roles.some(oldRole => role.id === oldRole.id));
+
+  if(isRolesUpdated || user.roles.length != oldUser.roles.length){
+    updates += 'Roles are changed \n';
+  }
+
+  return updates;
+
 }
 
 //define function for submit user object
@@ -277,6 +329,40 @@ const buttonUserSubmit=()=>{
     
 
     
+}
+
+//define fuction for update user
+const buttonUserUpdate=()=>{
+  console.log(user);
+  console.log(oldUser);
+
+  //check form errors
+  let errors = checkUserForm();
+  if(errors == ''){
+    //check update availability
+    let updates = checkUserFormUpdates();
+    if(updates != ""){
+      //need to get user confirmation
+      let userConfirm = confirm('Are you sure to update following changes..? \n'+updates)
+      if(userConfirm){
+        //call PUT service
+        const putServiceResponse = ajaxRequestBody("/user","PUT",user);
+        if(putServiceResponse == 'OK'){
+          alert("Update Successfully..!");
+          refreshUserTable();
+          refreshUserForm();
+        }else{
+          alert('Failed to update changes..\n'+putServiceResponse);
+        }
+      }
+    }else{
+      alert('There is nothing to update..!');
+    }
+  }else{
+    alert('Form has following errors..please check again! \n'+errors);
+  }
+  
+  
 }
 
 //create print function
@@ -351,4 +437,11 @@ const printUserFullTable=()=>{
           newTab.print();
       },1000)
   
+}
+
+//function for get user email
+const generateUserEmail=()=>{
+  textEmail.value = JSON.parse(selectEmployee.value).email; //set value
+  user.email = textEmail.value //bind value
+  textEmail.style.border = "2px solid green"; 
 }

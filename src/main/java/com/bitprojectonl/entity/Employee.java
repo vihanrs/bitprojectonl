@@ -90,7 +90,7 @@ public class Employee {
     @Column(name = "deleteddatetime")
     private LocalDateTime deleteDateTime;
 
-    @ManyToOne //relationship formate
+    @ManyToOne //relationship format
     @JoinColumn (name = "employee_status_id", referencedColumnName = "id") // join column condition
     private EmployeeStatus employeeStatusId;
 

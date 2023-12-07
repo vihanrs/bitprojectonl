@@ -16,7 +16,6 @@ public interface EmployeeDao extends JpaRepository<Employee,Integer>{
 	@Query(value = "Select lpad(max(e.empno)+1,8,0) as empno FROM employee as e",nativeQuery = true)
 	public String getNextEmpNo();
 	
-	
 	//define query for get employee by given mobile no
 	@Query(value = "Select e FROM Employee e WHERE e.mobile=?1")
 	public Employee getEmployeeByMobile(String mobile);

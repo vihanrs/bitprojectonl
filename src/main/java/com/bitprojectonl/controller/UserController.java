@@ -121,6 +121,8 @@ public class UserController {
 //			}else {
 //				user.setPassword(extUser.getPassword());
 //			}
+			
+			
 			user.setPassword(extUser.getPassword());
 			userDao.save(user);
 			return "OK";

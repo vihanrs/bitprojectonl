@@ -22,7 +22,6 @@ public class Privilege {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    @NotNull
     private Integer id;
 
     @Column(name = "sel")

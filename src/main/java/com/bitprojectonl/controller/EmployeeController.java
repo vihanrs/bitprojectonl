@@ -1,6 +1,5 @@
 package com.bitprojectonl.controller;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,8 +17,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bitprojectonl.dao.EmployeeDao;
 import com.bitprojectonl.dao.EmployeeStatusDao;
-import com.bitprojectonl.entity.Designation;
+import com.bitprojectonl.dao.UserDao;
 import com.bitprojectonl.entity.Employee;
+import com.bitprojectonl.entity.User;
+
+import jakarta.transaction.Transactional;
 
 @RestController
 public class EmployeeController {
@@ -28,6 +30,8 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeDao employeeDao;  // Dependency injection :EmployeeDao is an interface so it cannot create instance then use dependency injection
 
+	@Autowired
+	private UserDao userDao;
 	// public EmployeeController(EmployeeDao employeeDao){
 	// this.employeeDao = employeeDao;
 	// }
@@ -90,7 +94,7 @@ public class EmployeeController {
 			employee.setEmpNo(nextEmpNo);// auto generated EMP no
 			
 			System.out.println("Designation ID " + employee.getDesignationId());
-			employee.setDesignationId(new Designation(1, "Manager"));
+//			employee.setDesignationId(new Designation(1, "Manager"));
 
 			employeeDao.save(employee);
 			return nextEmpNo;
@@ -100,6 +104,7 @@ public class EmployeeController {
 	}
 	
 	// create server mapping for delete employee
+	@Transactional //manage the transaction commits
 	@DeleteMapping(value = "/employee")
 	public String delete(@RequestBody Employee employee) {
 		try {
@@ -119,6 +124,13 @@ public class EmployeeController {
 			extEmp.setDeleteDateTime(LocalDateTime.now());
 			employeeDao.save(extEmp);
 			
+			//set status in-active user account related to employee
+			User extUser = userDao.getUserByEmployee(extEmp.getId());
+			if(extUser != null) {
+				extUser.setStatus(false);
+				userDao.save(extUser);
+			}
+			
 			return "OK";
 		} catch (Exception e) {
 			return "Delete not Completed: " + e.getMessage();
@@ -127,10 +139,37 @@ public class EmployeeController {
 
 	// create mapping for update employee
 	@PutMapping(value = "/employee")
+	@Transactional
 	public String update(@RequestBody Employee employee) {
+		
+		//needs to check duplicate records
+		Employee extEmployee = employeeDao.getReferenceById(employee.getId());
+		if(extEmployee != null) {
+			return "Update not Completed: Employee not existing...!";
+		}
+		
+		Employee extEmployeeMobile = employeeDao.getEmployeeByMobile(employee.getMobile());
+		if(extEmployeeMobile != null && extEmployeeMobile.getId() != employee.getId()) {
+			return "Update not Completed: Mobile no Already Existing...!";
+		}
+		
+		Employee extEmployeeNic = employeeDao.getEmployeeByNic(employee.getNic());
+		if(extEmployeeNic != null && extEmployeeNic.getId() != employee.getId()) {
+			return "Update not Completed: NIC Already Existing...!";
+		}
 		try {
 			employee.setLastModifyDateTime(LocalDateTime.now());
 			employeeDao.save(employee);
+			
+			//check employee status and user status
+			if(employee.getEmployeeStatusId().getName().equals("Resign") || employee.getEmployeeStatusId().getName().equals("Delete") ){
+				User extUser = userDao.getUserByEmployee(employee.getId());
+				if(extUser != null) {
+					extUser.setStatus(false);
+					userDao.save(extUser);
+				}
+			}
+			
 			return "OK";
 		} catch (Exception e) {
 			return "Update not Completed : "+e.getMessage();

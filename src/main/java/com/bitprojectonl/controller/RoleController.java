@@ -15,8 +15,8 @@ public class RoleController {
 	@Autowired  //inject DesignationDao object into variable
 	private RoleDao roleDao;  //create designationDao object
 	
-	@GetMapping(value = "/role/list", produces = "application/json")
-	public List<Role> getAllData(){
+	@GetMapping(value = "/role/findall", produces = "application/json")
+	public List<Role> getAllRoles(){
 		return roleDao.findAll();
 	}
 }

@@ -26,19 +26,19 @@ public class Privilege {
 
     @Column(name = "sel")
     @NotNull
-    private boolean sel;
+    private Boolean sel;
 
     @Column(name = "inst")
     @NotNull
-    private boolean inst;
+    private Boolean inst;
 
     @Column(name = "upd")
     @NotNull
-    private boolean upd;
+    private Boolean upd;
 
     @Column(name = "del")
     @NotNull
-    private boolean del;
+    private Boolean del;
 
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id")

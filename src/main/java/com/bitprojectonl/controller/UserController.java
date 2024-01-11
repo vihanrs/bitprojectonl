@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,17 +27,35 @@ public class UserController {
 
 	@Autowired // inject UserDao object into variable
 	private UserDao userDao; // create userDao object
+	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Autowired
+	private PrivilegeController privilegeController;
 
 	// create get mapping for get user all data -- [/user/findall]
 	@GetMapping(value = "/findall", produces = "application/json")
 	public List<User> getAllData() {
-		return userDao.findAll(Sort.by(Direction.DESC, "id"));
+		//get loged user authentication object
+    	Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
+    	
+    	if(privilegeController.hasPrivilege(auth.getName(), "User", "select")) {
+    		return userDao.findAll(Sort.by(Direction.DESC, "id"));
+    	}else {
+    		return null;
+    	}
+		
 	}
 
 	// create UI service [/user -- return user UI]
 	@GetMapping
 	public ModelAndView userUI() {
+		//get loged user authentication object
+		Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
 		ModelAndView userView = new ModelAndView();
+		userView.addObject("logusername",auth.getName());
+		userView.addObject("title","User : BIT Project 2023");
 		userView.setViewName("user.html");
 		return userView;
 	}
@@ -42,6 +63,12 @@ public class UserController {
 	// create post mapping for save user
 	@PostMapping
 	public String saveUser(@RequestBody User user) {
+		//get loged user authentication object
+    	Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
+    	
+    	if(!privilegeController.hasPrivilege(auth.getName(), "User", "insert")) {
+    		return "Access Denied !!!";
+    	}
 
 		// check duplicate email,user name,employee
 		User extUser = userDao.getUserByUserName(user.getUserName());
@@ -62,6 +89,7 @@ public class UserController {
 		try {
 			// set added date time
 			user.setAddedDateTime(LocalDateTime.now());
+			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			userDao.save(user);
 			return "OK";
 		} catch (Exception e) {
@@ -72,6 +100,12 @@ public class UserController {
 	// create delete mapping for delete user account [/user]
 	@DeleteMapping
 	public String deleteUser(@RequestBody User user) {
+		//get loged user authentication object
+		Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
+		    	
+		if(!privilegeController.hasPrivilege(auth.getName(), "User", "delete")) {
+		    return "Access Denied !!!";
+		}
 
 		// need to check given user ext or not
 		User extUser = userDao.getReferenceById(user.getId());
@@ -91,6 +125,12 @@ public class UserController {
 	@PutMapping
 	public String updateUser(@RequestBody User user) {
 		// check logged user authentication and authorization
+		//get loged user authentication object
+		Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
+    	
+    	if(!privilegeController.hasPrivilege(auth.getName(), "User", "update")) {
+    		return "Access Denied !!!";
+    	}
 
 		User extUser = userDao.getReferenceById(user.getId());
 		if(extUser == null) {

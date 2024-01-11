@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index</title>
-  </head>
-  <body>
-    <h2>Dashboard</h2>
+  <head th:replace="~{head :: headFragment}"> </head>
+  <body class="sidebar-mini layout-fixed">
+    <div class="container-fluid wrapper ps-2">
+      <!-- Navbar -->
+      <nav th:replace="~{navbar :: navbarFragment}"></nav>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+      <!-- /.Main Sidebar Container -->
+
+      <div class="content-wrapper ps-2 pe-2">
+        <!-- title area start  -->
+        <div class="row p-3">
+          <div class="col-12 text-center title-div">
+            <h2 class="h2">
+              <i class="fa-solid fa-user-tie pe-3"></i>Dashboard
+            </h2>
+          </div>
+        </div>
+        <!-- title area end  -->
+
+        <div class="row mt-2"></div>
+      </div>
+    </div>
   </body>
 </html>

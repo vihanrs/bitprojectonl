@@ -1,11 +1,14 @@
 package com.bitprojectonl.controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,11 +42,19 @@ public class EmployeeController {
 	//create employeestatusdao object
 	@Autowired
 	private EmployeeStatusDao employeeStatusDao;
+	
+	@Autowired
+	private PrivilegeController privilegeController;
 
 	// create ui service [/employee -- return empolyee ui]
 	@RequestMapping(value = "/employee")
 	public ModelAndView employeeUI() {
+		//get loged user authentication object
+		Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
+				
 		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("logusername",auth.getName());
+		modelAndView.addObject("title","Employee : BIT Project 2023");
 		// set object when loading
 		// modelAndView.addObject("employee", employeeObj);
 		modelAndView.setViewName("employee.html");
@@ -107,8 +118,14 @@ public class EmployeeController {
 	@Transactional //manage the transaction commits
 	@DeleteMapping(value = "/employee")
 	public String delete(@RequestBody Employee employee) {
+		//get loged user authentication object
+    	Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
+    	
+		if(!privilegeController.hasPrivilege(auth.getName(), "Employee", "delete")) {
+			return "Access Denied !!!";
+		}
+		
 		try {
-			
 			//check database before delete
 			Employee extEmp = employeeDao.getReferenceById(employee.getId());
 			if(extEmp == null) {

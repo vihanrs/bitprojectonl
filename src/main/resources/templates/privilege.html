@@ -3,295 +3,275 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Privilege Management | BIT Project 2023</title>
-    <!-- link bootstrap css -->
-    <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" />
-    <!-- link bootstrap js -->
-    <script src="resources/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- fontawsome -->
-    <link rel="stylesheet" href="resources/fontawesome-6.4.2/css/all.css" />
-
-    <!-- employee css -->
-    <!-- linking with thymeleaf   th:src = @{}  /   th:href = @{} -->
-    <!-- <link rel="stylesheet" th:href="@{resources/css/employee.css}" /> -->
-    <link rel="stylesheet" href="resources/css/employee.css" />
-    <!-- button css -->
-    <link rel="stylesheet" href="resources/css/button.css" />
-
-    <!-- link jquery js file -->
-    <script src="resources/js/jquery.js"></script>
-
-    <!-- link datatable css file -->
-    <link
-      rel="stylesheet"
-      href="resources/datatables_1.13.7/datatables.min.css"
-    />
-
-    <!-- link datatable js file -->
-    <script src="resources/datatables_1.13.7/datatables.min.js"></script>
-
-    <!-- link validation js file -->
-    <script src="resources/js/validation.js"></script>
-    <!-- link tablefunction js file -->
-    <script src="resources/js/tablefunctions.js"></script>
-    <!-- link common js file -->
-    <script src="resources/js/common.js"></script>
+    <head th:replace="~{head :: headFragment}"> </head>
 
     <!-- link privilege js file -->
     <script src="resources/controllerjs/privilege.js"></script>
   </head>
-  <body>
-    <div class="container-fluid mr-1">
-      <!-- title area start  -->
-      <div class="row p-3">
-        <div class="col-12 text-center title-div">
-          <h2 class="h2">
-            <i class="fa-solid fa-user-tie pe-3"></i>Privilege Management
-          </h2>
-        </div>
-      </div>
-      <!-- title area end  -->
+  <body class="sidebar-mini layout-fixed">
+    <div class="container-fluid wrapper ps-2">
+      <!-- Navbar -->
+      <nav th:replace="~{navbar :: navbarFragment}"></nav>
+      <!-- /.navbar -->
 
-      <div class="row mt-2">
-        <div class="col-6">
-          <!-- <div id="divModifybutton" class="d-none">
+      <!-- Main Sidebar Container -->
+      <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+      <!-- /.Main Sidebar Container -->
+      <div class="content-wrapper ps-2 pe-2">
+        <!-- title area start  -->
+        <div class="row p-3">
+          <div class="col-12 text-center title-div">
+            <h2 class="h2">
+              <i class="fa-solid fa-user-tie pe-3"></i>Privilege Management
+            </h2>
+          </div>
+        </div>
+        <!-- title area end  -->
+
+        <div class="row mt-2">
+          <div class="col-6">
+            <!-- <div id="divModifybutton" class="d-none">
                 <button class="btn btn-warning fw-bold" style = "width:25%" type="button" >Edit</button>
                 <button class="btn btn-danger me-2 ms-2 fw-bold" style = "width:25%" type="button" onclick="deleteEmployee(window['editId'])">Delete</button>
                 <button class="btn btn-info fw-bold" style = "width:25%" type="button">Print</button>
             </div> -->
-          <div class="col-6">
-            <button class="btn btn-info" onclick="printEmpFullTable()">
-              Print Privilege Table
+            <div class="col-6">
+              <button class="btn btn-info" onclick="printEmpFullTable()">
+                Print Privilege Table
+              </button>
+            </div>
+          </div>
+          <div class="col-6 text-end">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#modalPrivilegeAddForm"
+            >
+              Add New Privilege
             </button>
           </div>
         </div>
-        <div class="col-6 text-end">
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#modalPrivilegeAddForm"
-          >
-            Add New Privilege
-          </button>
-        </div>
-      </div>
-      <div class="row mt-2">
-        <!-- table area start -->
-        <div class="col-12">
-          <div class="card table-area p-2">
-            <table class="table table-striped table-bordered" id="tblPrivilege">
-              <thead class="table-info">
-                <tr>
-                  <th>#</th>
-                  <th>Role</th>
-                  <th>Module</th>
-                  <th>Select</th>
-                  <th>Insert</th>
-                  <th>Update</th>
-                  <th>Delete</th>
-                  <th class="modify-button">Modify</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-        <!-- table area end -->
-      </div>
-
-      <!-- privilege add model -->
-      <div
-        class="modal"
-        id="modalPrivilegeAddForm"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-      >
-        <div class="modal-dialog model-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2>Edit Privilege</h2>
-              <button
-                type="button"
-                class="btn btn-close"
-                data-bs-dismiss="modal"
-              ></button>
+        <div class="row mt-2">
+          <!-- table area start -->
+          <div class="col-12">
+            <div class="card table-area p-2">
+              <table
+                class="table table-striped table-bordered"
+                id="tblPrivilege"
+              >
+                <thead class="table-info">
+                  <tr>
+                    <th>#</th>
+                    <th>Role</th>
+                    <th>Module</th>
+                    <th>Select</th>
+                    <th>Insert</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                    <th class="modify-button">Modify</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
             </div>
-            <div class="modal-body">
-              <form onsubmit="return false">
-                <!-- * required mark -->
-                <div class="row">
-                  <div class="col-12 text-end">
-                    <span class="fw-bold"
-                      ><span class="text-danger">* </span>Required</span
-                    >
-                  </div>
-                </div>
+          </div>
+          <!-- table area end -->
+        </div>
 
-                <!-- role start-->
-                <div class="row mt-1">
-                  <div class="col-3">
-                    <label for="cmbRole" class="form-label fw-bold">
-                      Role : <span class="text-danger"> * </span>
+        <!-- privilege add model start-->
+        <div
+          class="modal"
+          id="modalPrivilegeAddForm"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+        >
+          <div class="modal-dialog model-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2>Edit Privilege</h2>
+                <button
+                  type="button"
+                  class="btn btn-close"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form onsubmit="return false">
+                  <!-- * required mark -->
+                  <div class="row">
+                    <div class="col-12 text-end">
+                      <span class="fw-bold"
+                        ><span class="text-danger">* </span>Required</span
+                      >
+                    </div>
+                  </div>
+
+                  <!-- role start-->
+                  <div class="row mt-1">
+                    <div class="col-3">
+                      <label for="cmbRole" class="form-label fw-bold">
+                        Role : <span class="text-danger"> * </span>
+                      </label>
+                    </div>
+                    <div class="col-9">
+                      <select
+                        id="cmbRole"
+                        class="form-select"
+                        required
+                        onchange="selectDFieldValidator(cmbRole,'privilege','role'); generateModuleList()"
+                      >
+                        <option value="" selected disabled>
+                          Select Designation
+                        </option>
+                        <option value="Manager">Manager</option>
+                        <option value="Cashier">Cashier</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- role end-->
+                  <!-- module start -->
+                  <div class="row mt-1">
+                    <div class="col-3">
+                      <label for="cmbModule" class="form-label fw-bold">
+                        Module : <span class="text-danger"> * </span>
+                      </label>
+                    </div>
+                    <div class="col-9">
+                      <select
+                        id="cmbModule"
+                        class="form-select"
+                        required
+                        onchange="selectDFieldValidator(cmbModule,'privilege','module')"
+                      >
+                        <option value="" selected disabled>
+                          Select Designation
+                        </option>
+                        <option value="Manager">Manager</option>
+                        <option value="Cashier">Cashier</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- module end -->
+
+                  <!-- select privilege start -->
+                  <div class="row mt-1">
+                    <label for="cmbRole" class="col-3 form-label fw-bold">
+                      Select : <span class="text-danger"> * </span>
                     </label>
+                    <div class="col-8 form-check form-check-inline">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        onchange="checkBoxValidator(checkBoxSelect,'privilege','sel',true,false,labelCBSelect,'Granted','Not-Granted')"
+                        id="checkBoxSelect"
+                      />
+                      <label
+                        for="checkBoxSelect"
+                        id="labelCBSelect"
+                        class="form-check-label fw-bold"
+                        >Not-Granted</label
+                      >
+                    </div>
                   </div>
-                  <div class="col-9">
-                    <select
-                      id="cmbRole"
-                      class="form-select"
-                      required
-                      onchange="selectDFieldValidator(cmbRole,'privilege','role'); generateModuleList()"
-                    >
-                      <option value="" selected disabled>
-                        Select Designation
-                      </option>
-                      <option value="Manager">Manager</option>
-                      <option value="Cashier">Cashier</option>
-                    </select>
-                  </div>
-                </div>
-                <!-- role end-->
-                <!-- module start -->
-                <div class="row mt-1">
-                  <div class="col-3">
-                    <label for="cmbModule" class="form-label fw-bold">
-                      Module : <span class="text-danger"> * </span>
+                  <!-- select privilege end -->
+
+                  <!-- insert privilege start -->
+                  <div class="row mt-1">
+                    <label for="cmbRole" class="col-3 form-label fw-bold">
+                      Insert : <span class="text-danger"> * </span>
                     </label>
+                    <div class="col-8 form-check form-check-inline">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        onchange="checkBoxValidator(checkBoxInsert,'privilege','inst',true,false,labelCBInsert,'Granted','Not-Granted')"
+                        id="checkBoxInsert"
+                      />
+                      <label
+                        for="checkBoxInsert"
+                        id="labelCBInsert"
+                        class="form-check-label fw-bold"
+                        >Not-Granted</label
+                      >
+                    </div>
                   </div>
-                  <div class="col-9">
-                    <select
-                      id="cmbModule"
-                      class="form-select"
-                      required
-                      onchange="selectDFieldValidator(cmbModule,'privilege','module')"
-                    >
-                      <option value="" selected disabled>
-                        Select Designation
-                      </option>
-                      <option value="Manager">Manager</option>
-                      <option value="Cashier">Cashier</option>
-                    </select>
-                  </div>
-                </div>
-                <!-- module end -->
+                  <!-- insert privilege end -->
 
-                <!-- select privilege start -->
-                <div class="row mt-1">
-                  <label for="cmbRole" class="col-3 form-label fw-bold">
-                    Select : <span class="text-danger"> * </span>
-                  </label>
-                  <div class="col-8 form-check form-check-inline">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      onchange="checkBoxValidator(checkBoxSelect,'privilege','sel',true,false,labelCBSelect,'Granted','Not-Granted')"
-                      id="checkBoxSelect"
-                    />
-                    <label
-                      for="checkBoxSelect"
-                      id="labelCBSelect"
-                      class="form-check-label fw-bold"
-                      >Not-Granted</label
-                    >
+                  <!-- update privilege start -->
+                  <div class="row mt-1">
+                    <label for="cmbRole" class="col-3 form-label fw-bold">
+                      Update : <span class="text-danger"> * </span>
+                    </label>
+                    <div class="col-8 form-check form-check-inline">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        onchange="checkBoxValidator(checkBoxUpdate,'privilege','upd',true,false,labelCBUpdate,'Granted','Not-Granted')"
+                        id="checkBoxUpdate"
+                      />
+                      <label
+                        for="checkBoxUpdate"
+                        id="labelCBUpdate"
+                        class="form-check-label fw-bold"
+                        >Not-Granted</label
+                      >
+                    </div>
                   </div>
-                </div>
-                <!-- select privilege end -->
+                  <!-- update privilege end -->
 
-                <!-- insert privilege start -->
-                <div class="row mt-1">
-                  <label for="cmbRole" class="col-3 form-label fw-bold">
-                    Insert : <span class="text-danger"> * </span>
-                  </label>
-                  <div class="col-8 form-check form-check-inline">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      onchange="checkBoxValidator(checkBoxInsert,'privilege','inst',true,false,labelCBInsert,'Granted','Not-Granted')"
-                      id="checkBoxInsert"
-                    />
-                    <label
-                      for="checkBoxInsert"
-                      id="labelCBInsert"
-                      class="form-check-label fw-bold"
-                      >Not-Granted</label
-                    >
+                  <!-- delete privilege start -->
+                  <div class="row mt-1">
+                    <label for="cmbRole" class="col-3 form-label fw-bold">
+                      Delete : <span class="text-danger"> * </span>
+                    </label>
+                    <div class="col-8 form-check form-check-inline">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        onchange="checkBoxValidator(checkBoxDelete,'privilege','del',true,false,labelCBDelete,'Granted','Not-Granted')"
+                        id="checkBoxDelete"
+                      />
+                      <label
+                        for="checkBoxDelete"
+                        id="labelCBDelete"
+                        class="form-check-label fw-bold"
+                        >Not-Granted</label
+                      >
+                    </div>
                   </div>
-                </div>
-                <!-- insert privilege end -->
+                  <!-- delete privilege end -->
 
-                <!-- update privilege start -->
-                <div class="row mt-1">
-                  <label for="cmbRole" class="col-3 form-label fw-bold">
-                    Update : <span class="text-danger"> * </span>
-                  </label>
-                  <div class="col-8 form-check form-check-inline">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      onchange="checkBoxValidator(checkBoxUpdate,'privilege','upd',true,false,labelCBUpdate,'Granted','Not-Granted')"
-                      id="checkBoxUpdate"
-                    />
-                    <label
-                      for="checkBoxUpdate"
-                      id="labelCBUpdate"
-                      class="form-check-label fw-bold"
-                      >Not-Granted</label
-                    >
+                  <!-- buttons -->
+                  <div class="row mt-2">
+                    <div class="col-4 text-start">
+                      <button type="reset" class="btn fw-bold btn-clear">
+                        <i class="fa-solid fa-recycle me-2"></i>Clear
+                      </button>
+                    </div>
+                    <div class="col-8 text-end">
+                      <button
+                        type="submit"
+                        class="btn me-2 fw-bold btn-update"
+                        onclick="buttonEmployeeUpdate()"
+                      >
+                        <i class="fa-solid fa-gears me-2"></i>Update
+                      </button>
+                      <button
+                        type="submit"
+                        class="btn fw-bold btn-add"
+                        onclick="addEmployee()"
+                      >
+                        <i class="fa-solid fa-square-plus me-2"></i>Add
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <!-- update privilege end -->
-
-                <!-- delete privilege start -->
-                <div class="row mt-1">
-                  <label for="cmbRole" class="col-3 form-label fw-bold">
-                    Delete : <span class="text-danger"> * </span>
-                  </label>
-                  <div class="col-8 form-check form-check-inline">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      onchange="checkBoxValidator(checkBoxDelete,'privilege','del',true,false,labelCBDelete,'Granted','Not-Granted')"
-                      id="checkBoxDelete"
-                    />
-                    <label
-                      for="checkBoxDelete"
-                      id="labelCBDelete"
-                      class="form-check-label fw-bold"
-                      >Not-Granted</label
-                    >
-                  </div>
-                </div>
-                <!-- delete privilege end -->
-
-                <!-- buttons -->
-                <div class="row mt-2">
-                  <div class="col-4 text-start">
-                    <button type="reset" class="btn fw-bold btn-clear">
-                      <i class="fa-solid fa-recycle me-2"></i>Clear
-                    </button>
-                  </div>
-                  <div class="col-8 text-end">
-                    <button
-                      type="submit"
-                      class="btn me-2 fw-bold btn-update"
-                      onclick="buttonEmployeeUpdate()"
-                    >
-                      <i class="fa-solid fa-gears me-2"></i>Update
-                    </button>
-                    <button
-                      type="submit"
-                      class="btn fw-bold btn-add"
-                      onclick="addEmployee()"
-                    >
-                      <i class="fa-solid fa-square-plus me-2"></i>Add
-                    </button>
-                  </div>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
         </div>
+        <!-- privilege add model end-->
       </div>
     </div>
   </body>

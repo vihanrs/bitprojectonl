@@ -52,7 +52,7 @@ const refreshTable = () => {
     privileges,
     displayProperty,
     refillPrivilege,
-    deleteEmployee,
+    deletePrivilege,
     printEmployee,
     true
   );
@@ -122,10 +122,49 @@ const refreshPrivilegeForm = () => {
   modules = ajaxGetRequest("/module/findall");
   fillDataIntoSelect(cmbModule, "Select Module", modules, "name");
   cmbModule.disabled = true;
+
+  cmbRole.style.border = "1px solid #ced4da";
+  cmbModule.style.border = "1px solid #ced4da";
+
+  privilege.sel = false;
+  privilege.inst = false;
+  privilege.upd = false;
+  privilege.del = false;
+
+  labelCBSelect.innerText = "Not-Granted";
+  labelCBInsert.innerText = "Not-Granted";
+  labelCBUpdate.innerText = "Not-Granted";
+  labelCBDelete.innerText = "Not-Granted";
+};
+
+const checkError = () => {
+  //need to check all required prperty filds
+  let error = "";
+  // if(txtFullName.value == ''){
+  if (privilege.role == null) {
+    error = error + "Please select valid role...!\n";
+  }
+  if (privilege.module == null) {
+    error = error + "Please select valid module...!\n";
+  }
+  if (privilege.sel == null) {
+    error = error + "Please select select privilege...!\n";
+  }
+  if (privilege.inst == null) {
+    error = error + "Please select insert privilege...!\n";
+  }
+  if (privilege.upd == null) {
+    error = error + "Please select update privilege...!\n";
+  }
+  if (privilege.del == null) {
+    error = error + "Please select delete privilege...!\n";
+  }
+
+  return error;
 };
 
 //create function for add button
-const addEmployee = () => {
+const addPrivilege = () => {
   //1. need to check form errors ---> checkError()
   console.log(checkError());
   let formErrors = checkError();
@@ -134,33 +173,26 @@ const addEmployee = () => {
     //2. need to get user confirmation
     let userConfirm = window.confirm(
       "Are you sure to add following employee..?\n" +
-        "\nFull Name : " +
-        employee.fullName +
-        "\nNIC : " +
-        employee.nic +
-        "\nMobile : " +
-        employee.mobile +
-        "\nGender : " +
-        employee.gender +
-        "\nEmail : " +
-        employee.email +
-        "\nDesgnation : " +
-        employee.designationId.name
+        "\nRole : " +
+        privilege.role.name +
+        "\nModule : " +
+        privilege.module.name
     );
 
     if (userConfirm) {
       //3. pass data into back end
-      let serverResponse = ajaxRequestBody("/employee", "POST", employee); // url,method,object
+      let serverResponse = ajaxRequestBody("/privilege", "POST", privilege); // url,method,object
 
       //4. check back end response
-      if (new RegExp("^[0-9]{8}$").test(serverResponse)) {
+      if (serverResponse === "OK") {
         alert("Save sucessfully..! " + serverResponse);
         //need to refresh table and form
         refreshTable();
-        refreshEmployeeForm();
+        privilegeForm.reset();
+        refreshPrivilegeForm();
 
         //need to hide modal
-        $("#modalEmployeeAddForm").modal("hide");
+        $("#modalPrivilegeAddForm").modal("hide");
       } else {
         alert("Save not sucessfully..! have some errors \n" + serverResponse);
       }
@@ -170,97 +202,52 @@ const addEmployee = () => {
   }
 };
 
-//delete employee record
-const deleteEmployee = (rowObject, rowId) => {
+//delete Privilege record
+const deletePrivilege = (rowObject, rowId) => {
   const userConfirm = confirm(
-    "Are you sure to delete following employee \n" + rowObject.fullName
+    "Are you sure to delete following privilege \n" +
+      "Role : " +
+      rowObject.role.name +
+      "\nModule : " +
+      rowObject.module.name
   );
 
   if (userConfirm) {
     //response from backend ...
-    let serverResponse = ajaxRequestBody("/employee", "DELETE", rowObject); // url,method,object
+    let serverResponse = ajaxRequestBody("/privilege", "DELETE", rowObject); // url,method,object
     //4. check back end response
     if (serverResponse == "OK") {
       alert("Delete sucessfully..! \n" + serverResponse);
       //need to refresh table and form
       refreshTable();
+      privilegeForm.reset();
       refreshEmployeeForm();
     } else {
-      alert("Save not sucessfully..! have some errors \n" + serverResponse);
+      alert("Delete not sucessfully..! have some errors \n" + serverResponse);
     }
   }
-};
-
-const checkError = () => {
-  //need to check all required prperty filds
-  let error = "";
-  // if(txtFullName.value == ''){
-  if (employee.fullName == null) {
-    error = error + "Please Enter Valid Full Name...!\n";
-    txtFullName.style.border = "2px solid red";
-  }
-  if (employee.callingName == null) {
-    error = error + "Please Enter Valid Calling Name...!\n";
-    txtEmail.style.border = "2px solid red";
-  }
-  if (employee.nic == null) {
-    error = error + "Please Enter NIC...!\n";
-    txtNIC.style.border = "2px solid red";
-  }
-  if (employee.gender == null) {
-    error = error + "Please Enter Gender...!\n";
-  }
-  if (employee.dateOfBirth == null) {
-    error = error + "Please Enter dateOfBirth...!\n";
-    dateDOB.style.border = "2px solid red";
-  }
-  if (employee.mobile == null) {
-    error = error + "Please Enter Mobile No...!\n";
-    txtMobileNo.style.border = "2px solid red";
-  }
-  if (employee.email == null) {
-    error = error + "Please Enter Email...!\n";
-    txtEmail.style.border = "2px solid red";
-  }
-  if (employee.address == null) {
-    error = error + "Please Enter Address...!\n";
-    txtAddress.style.border = "2px solid red";
-  }
-  if (employee.designationId == null) {
-    error = error + "Please Enter Designation...!\n";
-    cmbDesignation.style.border = "2px solid red";
-  }
-  if (employee.civilStatus == null) {
-    error = error + "Please Enter Civil Status...!\n";
-    cmbCivilstatus.style.border = "2px solid red";
-  }
-  if (employee.employeeStatusId == null) {
-    error = error + "Please Enter Employee Status...!\n";
-    cmbEmployeeStatus.style.border = "2px solid red";
-  }
-
-  return error;
 };
 
 const checkUpdate = () => {
   let updates = "";
 
-  if (oldemployee.nic != employee.nic) {
-    updates = updates + "NIC has changed \n";
+  if (oldprivilege.role.id != privilege.role.id) {
+    updates = updates + "Role has changed \n";
   }
-
-  if (oldemployee.designationId.name != employee.designationId.name) {
-    updates = updates + "Designation has changed \n";
+  if (oldprivilege.module.id != privilege.module.id) {
+    updates = updates + "Module has changed \n";
   }
-
-  if (oldemployee.mobile != employee.mobile) {
-    updates =
-      updates +
-      "NIC has changed " +
-      oldemployee.mobile +
-      " into " +
-      employee.mobile +
-      " \n";
+  if (oldprivilege.sel != privilege.sel) {
+    updates = updates + "Select has changed \n";
+  }
+  if (oldprivilege.inst != privilege.inst) {
+    updates = updates + "Insert has changed \n";
+  }
+  if (oldprivilege.upd != privilege.upd) {
+    updates = updates + "Update has changed \n";
+  }
+  if (oldprivilege.del != privilege.del) {
+    updates = updates + "Delete has changed \n";
   }
 
   return updates;
@@ -295,10 +282,40 @@ const refillPrivilege = (rowObject, rowId) => {
 
   cmbRole.disabled = true;
   cmbModule.disabled = true;
+
+  if (privilege.sel) {
+    checkBoxSelect.checked = true;
+    labelCBSelect.innerText = "Granted";
+  } else {
+    checkBoxSelect.checked = false;
+    labelCBSelect.innerText = "Not-Granted";
+  }
+
+  if (privilege.inst) {
+    checkBoxInsert.checked = true;
+    labelCBInsert.innerText = "Granted";
+  } else {
+    checkBoxInsert.checked = false;
+    labelCBInsert.innerText = "Not-Granted";
+  }
+  if (privilege.upd) {
+    checkBoxUpdate.checked = true;
+    labelCBUpdate.innerText = "Granted";
+  } else {
+    checkBoxUpdate.checked = false;
+    labelCBUpdate.innerText = "Not-Granted";
+  }
+  if (privilege.del) {
+    checkBoxDelete.checked = true;
+    labelCBDelete.innerText = "Granted";
+  } else {
+    checkBoxDelete.checked = false;
+    labelCBDelete.innerText = "Not-Granted";
+  }
 };
 
-//define method for employee update
-const buttonEmployeeUpdate = () => {
+//define method for privilege update
+const buttonPrivilegeUpdate = () => {
   let errors = checkError();
   if (errors == "") {
     let updates = checkUpdate();
@@ -308,18 +325,19 @@ const buttonEmployeeUpdate = () => {
       );
       if (userConfirm) {
         let updateSeriveResponse = ajaxRequestBody(
-          "/employee",
+          "/privilege",
           "PUT",
-          employee
+          privilege
         );
         if (updateSeriveResponse == "OK") {
           alert("Update sucessfully..! ");
           //need to refresh table and form
           refreshTable();
-          refreshEmployeeForm();
+          privilegeForm.reset();
+          refreshPrivilegeForm();
 
           //need to hide modal
-          $("#modalEmployeeAddForm").modal("hide");
+          $("#modalPrivilegeAddForm").modal("hide");
         } else {
           alert(
             "Update not sucessfully..! have some errors \n" +

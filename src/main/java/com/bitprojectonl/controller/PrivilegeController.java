@@ -32,7 +32,7 @@ public class PrivilegeController {
     //get mapping for generate privilege UI
     @GetMapping()
     public ModelAndView getPrivilegeUI() {
-    	//get loged user authentication object
+    	//get logged user authentication object
     	Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
     	
     	ModelAndView privilegeView = new ModelAndView();
@@ -42,7 +42,7 @@ public class PrivilegeController {
     	return privilegeView;
     }
     
-    //get service mapping for get all designations
+    //get service mapping for get all privileges
     @GetMapping(value = "/findall", produces = "application/json")
     public List<Privilege> findAll() {
         return privilegeDao.findAll(Sort.by(Direction.DESC,"id"));
@@ -72,11 +72,12 @@ public class PrivilegeController {
 	public String updatePrivilege(@RequestBody Privilege privilege){
 		//authentication authorization check
 
-		//chcek existing 
+		//check existing 
 		Privilege extPrivilege = privilegeDao.getReferenceById(privilege.getId());
 		if(extPrivilege == null){
 			return "Update not complete : Given privilege record not existe...!";
 		}
+		
 		try {
 
 			privilegeDao.save(privilege);
@@ -93,7 +94,7 @@ public class PrivilegeController {
 	public String deletePrivilege(@RequestBody Privilege privilege){
 		//authentication authorization check
 
-		//chcek existing 
+		//check existing 
 		Privilege extPrivilege = privilegeDao.getReferenceById(privilege.getId());
 		if(extPrivilege == null){
 			return "Delete not complete : Given privilege record not existe...!";
@@ -114,7 +115,14 @@ public class PrivilegeController {
 		}
 	}
 	
+	// get mapping for get privileges by logged user module
+	@GetMapping(value = "/bylogedusermodule/{modulename}" , produces = "application/json")
+	public HashMap<String,Boolean> getPrivilegeByLoggedUserModule(@PathVariable("modulename") String moduleName){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return getPrivilegeByUserAndModule(auth.getName(), moduleName);
+	}
     
+	//define method for get privilege by user module
     public HashMap<String,Boolean> getPrivilegeByUserAndModule(String username,String module){
     	HashMap<String, Boolean> userPrivilege = new HashMap<String,Boolean>();
     	

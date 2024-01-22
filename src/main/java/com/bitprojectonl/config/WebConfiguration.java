@@ -24,6 +24,7 @@ public class WebConfiguration {
 			.requestMatchers("/index").hasAnyAuthority("Admin","Manager","Cashier","Store-Manager")
 			.requestMatchers("/employee/**").hasAnyAuthority("Admin","Manager")
 			.requestMatchers("/privilege/**").hasAnyAuthority("Admin","Manager")
+			.requestMatchers("/item/**").hasAnyAuthority("Admin","Manager","Cashier","Store-Manager")
 			.requestMatchers("/user").hasAnyAuthority("Admin","Manager").anyRequest().authenticated();
 		})
 		//login form detail

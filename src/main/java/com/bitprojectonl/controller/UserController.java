@@ -37,7 +37,7 @@ public class UserController {
 	// create get mapping for get user all data -- [/user/findall]
 	@GetMapping(value = "/findall", produces = "application/json")
 	public List<User> getAllData() {
-		//get loged user authentication object
+		//get logged user authentication object
     	Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
     	
     	if(privilegeController.hasPrivilege(auth.getName(), "User", "select")) {
@@ -51,7 +51,7 @@ public class UserController {
 	// create UI service [/user -- return user UI]
 	@GetMapping
 	public ModelAndView userUI() {
-		//get loged user authentication object
+		//get logged user authentication object
 		Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
 		ModelAndView userView = new ModelAndView();
 		userView.addObject("logusername",auth.getName());
@@ -63,7 +63,7 @@ public class UserController {
 	// create post mapping for save user
 	@PostMapping
 	public String saveUser(@RequestBody User user) {
-		//get loged user authentication object
+		//get logged user authentication object
     	Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
     	
     	if(!privilegeController.hasPrivilege(auth.getName(), "User", "insert")) {

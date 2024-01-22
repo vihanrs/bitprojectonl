@@ -19,4 +19,8 @@ public class RoleController {
 	public List<Role> getAllRoles(){
 		return roleDao.findAll();
 	}
+	@GetMapping(value = "/role/list", produces = "application/json")
+	public List<Role> getAllRoleList(){
+		return roleDao.findAll();
+	}
 }

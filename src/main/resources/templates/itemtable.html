@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <head th:replace="~{head :: headFragment}"> </head>
+    <!-- link employee js file -->
+    <script src="resources/controllerjs/itemtable.js"></script>
+  </head>
+  <body class="sidebar-mini layout-fixed">
+    <div class="container-fluid wrapper ps-2">
+      <!-- Navbar -->
+      <nav th:replace="~{navbar :: navbarFragment}"></nav>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <aside th:replace="~{sidebar :: sidebarFragment}"></aside>
+      <!-- /.Main Sidebar Container -->
+
+      <div class="content-wrapper ps-2 pe-2">
+        <!-- title area start  -->
+        <div class="row p-3">
+          <div class="col-12 text-center title-div">
+            <h2 class="h2">
+              <i class="fa-solid fa-user-tie pe-3"></i>Item Management
+            </h2>
+          </div>
+        </div>
+        <!-- title area end  -->
+
+        <div class="row mt-2">
+          <div class="col-6">
+            <!-- <div id="divModifybutton" class="d-none">
+                <button class="btn btn-warning fw-bold" style = "width:25%" type="button" >Edit</button>
+                <button class="btn btn-danger me-2 ms-2 fw-bold" style = "width:25%" type="button" onclick="deleteEmployee(window['editId'])">Delete</button>
+                <button class="btn btn-info fw-bold" style = "width:25%" type="button">Print</button>
+            </div> -->
+            <div class="col-6">
+              <button class="btn btn-info" onclick="printEmpFullTable()">
+                Print Item Table
+              </button>
+            </div>
+          </div>
+          <div class="col-6 text-end">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#modalEmployeeAddForm"
+            >
+              Add New Item
+            </button>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <!-- table area start -->
+          <div class="col-12">
+            <div class="card table-area p-2">
+              <table
+                class="table table-striped table-bordered"
+                id="tblEmployee"
+              >
+                <thead class="table-info">
+                  <tr>
+                    <th>#</th>
+                    <th>Number</th>
+                    <th>Full Name</th>
+                    <th>NIC</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th class="modify-button">Modify</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Emp0001</td>
+                    <td>Vihan Rojitha</td>
+                    <td>984650752V</td>
+                    <td>0716024605</td>
+                    <td>vihan@gmail.com</td>
+                    <td><p class="estatus-working">Working</p></td>
+                    <td>
+                      <button type="button" class="btn btn-outline-success">
+                        <i class="fa-solid fa-eye pe-2"></i>View
+                      </button>
+                      <button type="button" class="btn btn-outline-warning">
+                        <i class="fa-solid fa-pen-square pe-2"></i>Edit
+                      </button>
+                      <button type="button" class="btn btn-outline-danger">
+                        <i class="fa-solid fa-trash pe-2"></i>Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- table area end -->
+        </div>
+      </div>
+      <!-- employee add model -->
+      <div
+        class="modal"
+        id="modalEmployeeAddForm"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+      >
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Edit Employee</h2>
+              <button
+                type="button"
+                class="btn btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form onsubmit="return false">
+                <!-- * required mark -->
+                <div class="row">
+                  <div class="col-12 text-end">
+                    <span class="fw-bold"
+                      ><span class="text-danger">* </span>Required</span
+                    >
+                  </div>
+                </div>
+
+                <!-- employee fullname start-->
+                <div class="row mt-1">
+                  <label for="txtFullName" class="col-3 col-form-label fw-bold">
+                    Full Name : <span class="text-danger"> * </span>
+                  </label>
+                  <div class="col-9">
+                    <input
+                      type="text"
+                      placeholder="Enter Full Name"
+                      class="form-control"
+                      id="txtFullName"
+                      required
+                      onkeyup="textFieldValidator(txtFullName,'^(([A-Z][a-z]{3,20}[\\s])+([A-Z][a-z]{3,20}){1})$','employee','fullName'); generateCallingNameValues()"
+                    />
+                  </div>
+                </div>
+                <!-- employee fullname end-->
+
+                <!-- calling name / nic / gender / brithday -->
+                <div class="row mt-1">
+                  <!-- calling name -->
+                  <div class="col-3">
+                    <label for="txtCallingName" class="form-label fw-bold">
+                      Calling Name : <span class="text-danger"> * </span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter Calling Name"
+                      list="callingname"
+                      class="form-select"
+                      id="txtCallingName"
+                      required
+                      onchange="callingNameValidator(this)"
+                      onkeyup="callingNameValidator(this)"
+                    />
+                    <!-- callingNameValidator(txtCallingName,callingname) -->
+                    <datalist id="callingname">
+                      <option value="Part 1"></option>
+                      <option value="Part 2"></option>
+                      <option value="Part 3"></option>
+                      <option value="Part 4"></option>
+                    </datalist>
+                  </div>
+                  <!-- nic -->
+                  <div class="col-3">
+                    <label for="txtNIC" class="form-label fw-bold">
+                      NIC : <span class="text-danger"> * </span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter NIC"
+                      class="form-control"
+                      id="txtNIC"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="bottom"
+                      data-bs-title="Ex: 980480256V"
+                      required
+                      onkeyup="textFieldValidator(txtNIC,'^(([0-9]{9}[VvXxSs])|([2][0][0-9]{2}[0-9]{8}))$','employee','nic')"
+                    />
+                  </div>
+                  <!-- gender -->
+                  <div class="col-3">
+                    <div class="row">
+                      <label for="radioGender" class="form-label fw-bold">
+                        Gender : <span class="text-danger"> * </span>
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="gender"
+                        class="from-check-input"
+                        value="male"
+                        id="radioGenderMale"
+                        onchange="radioFieldValidator(radioGenderMale,'employee','gender')"
+                      />
+                      <label
+                        for="radioGenderMale"
+                        class="form-check-label fw-bold"
+                        >Male</label
+                      >
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="gender"
+                        class="from-check-input"
+                        value="female"
+                        id="radioGenderFemale"
+                        onchange="radioFieldValidator(radioGenderFemale,'employee','gender')"
+                      />
+                      <label
+                        for="radioGenderFemale"
+                        class="form-check-label fw-bold"
+                        >Female</label
+                      >
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        onchange="checkBoxValidator(checkBoxActive,'employee','active',true,false,labelCBActive,'Active','In-Active')"
+                        id="checkBoxActive"
+                      />
+                      <label
+                        for="checkBoxActive"
+                        id="labelCBActive"
+                        class="form-check-label fw-bold"
+                        >In-Active</label
+                      >
+                    </div>
+                  </div>
+                  <!-- birthday -->
+                  <div class="col-3">
+                    <label for="dateDOB" class="form-label fw-bold">
+                      Date of Birth : <span class="text-danger"> * </span>
+                    </label>
+                    <input
+                      type="date"
+                      id="dateDOB"
+                      class="form-control"
+                      required
+                      onchange="dateFieldValidator(dateDOB,'employee','dateOfBirth')"
+                    />
+                  </div>
+                </div>
+
+                <!-- mobile / land / email -->
+                <div class="row mt-2">
+                  <!-- mobile -->
+                  <div class="col-4">
+                    <label for="txtMobileNo" class="form-label fw-bold">
+                      Mobile No : <span class="text-danger"> * </span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text"
+                        ><i class="fa-solid fa-mobile-retro"></i
+                      ></span>
+                      <input
+                        type="text"
+                        placeholder="Enter Mobile No"
+                        id="txtMobileNo"
+                        class="form-control"
+                        required
+                        onkeyup="textFieldValidator(txtMobileNo,'^[0][7][01245678][0-9]{7}$','employee','mobile')"
+                      />
+                    </div>
+                  </div>
+                  <!-- land -->
+                  <div class="col-4">
+                    <label for="txtLandNo" class="form-label fw-bold">
+                      Land No : <span class="text-danger"> (optional) </span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text"
+                        ><i class="fa-solid fa-phone-volume"></i
+                      ></span>
+                      <input
+                        type="text"
+                        placeholder="Enter Land No"
+                        id="txtLandNo"
+                        class="form-control"
+                        onkeyup="textFieldValidator(txtLandNo,'^[0][12345689][0-9]{8}$','employee','landNo')"
+                      />
+                    </div>
+                  </div>
+                  <!-- email -->
+                  <div class="col-4">
+                    <label for="txtEmail" class="form-label fw-bold">
+                      Email : <span class="text-danger"> * </span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text"
+                        ><i class="fa-solid fa-envelope"></i
+                      ></span>
+                      <input
+                        type="email"
+                        placeholder="Enter Email Address"
+                        id="txtEmail"
+                        class="form-control"
+                        required
+                        onkeyup="textFieldValidator(txtEmail,'^[A-Za-z0-9]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','employee','email')"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- address / note -->
+                <div class="row mt-2">
+                  <div class="col-6">
+                    <div class="form-floating">
+                      <textarea
+                        id="txtAddress"
+                        class="form-control"
+                        placeholder="Enter Address Here"
+                        required
+                        onkeyup="textFieldValidator(txtAddress,'^.*$','employee','address');"
+                      ></textarea>
+                      <label for="txtAddress" class="form-label fw-bold">
+                        Address : <span class="text-danger"> * </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-floating">
+                      <textarea
+                        id="txtNote"
+                        class="form-control"
+                        placeholder="Enter Note Here"
+                        required
+                        onkeyup="textFieldValidator(txtNote,'^.*$','employee','note');"
+                      ></textarea>
+                      <label for="txtNote" class="form-label fw-bold">
+                        Note : <span class="text-danger"> (optional) </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- designation / civilstatus / employee status -->
+                <div class="row mt-2">
+                  <div class="col-4">
+                    <label for="cmbDesignation" class="form-label fw-bold">
+                      Designation : <span class="text-danger"> * </span>
+                    </label>
+                    <select
+                      id="cmbDesignation"
+                      class="form-select"
+                      required
+                      onchange="selectDFieldValidator(cmbDesignation,'employee','designationId')"
+                    >
+                      <option value="" selected disabled>
+                        Select Designation
+                      </option>
+                      <option value="Manager">Manager</option>
+                      <option value="Cashier">Cashier</option>
+                    </select>
+                  </div>
+                  <div class="col-4">
+                    <label for="cmbCivilstatus" class="form-label fw-bold">
+                      Civilstatus : <span class="text-danger"> * </span>
+                    </label>
+                    <select
+                      id="cmbCivilstatus"
+                      class="form-select"
+                      required
+                      onchange="selectFieldValidator(cmbCivilstatus,'employee','civilStatus')"
+                    >
+                      <option value="" selected disabled>
+                        Select Civilstatus
+                      </option>
+                      <option value="Single">Single</option>
+                      <option value="Married">Married</option>
+                    </select>
+                  </div>
+                  <div class="col-4">
+                    <label for="cmbEmployeeStatus" class="form-label fw-bold">
+                      Employee Status : <span class="text-danger"> * </span>
+                    </label>
+                    <select
+                      id="cmbEmployeeStatus"
+                      class="form-select"
+                      required
+                      onchange="selectDFieldValidator(cmbEmployeeStatus,'employee','employeeStatusId')"
+                    >
+                      <option value="" disabled>Select Employee Status</option>
+                      <option value="Working" selected>Working</option>
+                      <option value="Resign">Resign</option>
+                      <option value="Deleted">Deleted</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- buttons -->
+                <div class="row mt-2">
+                  <div class="col-4 text-start">
+                    <button type="reset" class="btn fw-bold btn-clear">
+                      <i class="fa-solid fa-recycle me-2"></i>Clear
+                    </button>
+                  </div>
+                  <div class="col-8 text-end">
+                    <button
+                      type="submit"
+                      class="btn me-2 fw-bold btn-update"
+                      onclick="buttonEmployeeUpdate()"
+                      id="btnEmpUpdate"
+                    >
+                      <i class="fa-solid fa-gears me-2"></i>Update
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn fw-bold btn-add"
+                      onclick="addEmployee()"
+                      id="btnEmpSave"
+                    >
+                      <i class="fa-solid fa-square-plus me-2"></i>Add
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modalPrintEmployee">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>View Employee Details</h2>
+            <button class="btn btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <table id="printEmployeeTable" class="table">
+              <tr>
+                <th>FullName</th>
+                <td id="tdFullName"></td>
+              </tr>
+              <tr>
+                <th>NIC</th>
+                <td id="tdNIC"></td>
+              </tr>
+              <tr>
+                <th>Mobile</th>
+                <td id="tdMobile"></td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td id="tdStatus"></td>
+              </tr>
+            </table>
+          </div>
+          <dv class="modal-footer">
+            <button class="btn btn-info" onclick="printEmpTable()">
+              Print
+            </button>
+          </dv>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

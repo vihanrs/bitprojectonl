@@ -24,6 +24,11 @@
         required
         placeholder="Enter password"
       />
+
+      <!-- check error param with thymeleaf -->
+      <div th:if="${param.error}" style="color: red">
+        Invalid Username or Password
+      </div>
       <button type="submit">Login</button>
     </form>
   </body>

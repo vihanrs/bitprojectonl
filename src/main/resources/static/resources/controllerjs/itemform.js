@@ -1,4 +1,5 @@
 window.onload = () => {
+  userPrivilages = ajaxGetRequest("/privilege/bylogedusermodule/Item");
   //call table refresh function
   refreshItemForm();
 };
@@ -16,6 +17,7 @@ const refreshItemForm = () => {
     "Not-Available"
   );
   //bind default value
+  //use of JSON.parse  beacuse values are dynamic
   item.itemstatus_id = JSON.parse(cmbItemStatus.value);
   cmbItemStatus.style.border = "2px solid green";
 
@@ -43,6 +45,27 @@ const refreshItemForm = () => {
     packagetypes,
     "name"
   );
+
+  resetIntoDetault([
+    cmbBrand,
+    cmbSubCategory,
+    cmbCategory,
+    cmbUnitType,
+    cmbPackageType,
+    txtUnitSize,
+    txtItemName,
+    txtSalePrice,
+    txtPurchasePrice,
+    txtNote,
+    textROP,
+    textROQ,
+  ]);
+
+  if (userPrivilages.insert) {
+    btnSave.disabled = "";
+  } else {
+    btnSave.disabled = "disabled";
+  }
 };
 
 //define function for filter sub category by category
@@ -88,5 +111,50 @@ const generateItemName = () => {
       JSON.parse(cmbPackageType.value).name;
     item.itemname = txtItemName.value;
     txtItemName.style.border = "2px solid green";
+  }
+};
+
+const checkFormErrors = () => {
+  let errors = "";
+
+  //check all required fields
+  // if (item.itemname == null) {
+  //   errors = errors + "Please enter item name...! ";
+  // }
+
+  //use when this property not in selected property list which passing to the backend
+  if (cmbCategory.value == "") {
+    errors = errors + "Please select category...! ";
+  }
+
+  // if (item.category_id == null) {
+  //   errors = errors + "Please select category...! ";
+  // }
+
+  return errors;
+};
+
+const submitItemForm = () => {
+  //check form errors
+  let errors = checkFormErrors();
+  if (errors == "") {
+    //get user confirmation
+    let userConfirmation = confirm(
+      "Are you sure to following item details \n+" + "Item name" + item.itemname
+    );
+
+    if (userConfirmation) {
+      //call post service
+      let serviceResponse = ajaxRequestBody("/item", "POST", item);
+      if (serviceResponse == "OK") {
+        alert("Save successfully");
+        formItem.reset();
+        refreshItemForm();
+      } else {
+        alert("Save not successfully \n" + serviceResponse);
+      }
+    }
+  } else {
+    alert("Form has following errors.." + errors);
   }
 };

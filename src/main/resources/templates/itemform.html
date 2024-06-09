@@ -29,14 +29,14 @@
         <div class="row mt-2">
           <div class="col-6"></div>
           <div class="col-6 text-end">
-            <button type="button" class="btn btn-primary">View Items</button>
+            <a class="btn btn-primary" href="/itemtable">View Items</a>
           </div>
         </div>
         <!-- item add model start-->
         <div class="row mt-2">
           <div class="col-12">
             <div class="card p-2">
-              <form onsubmit="return false">
+              <form onsubmit="return false" id="formItem">
                 <!-- * required mark -->
                 <div class="row">
                   <div class="col-12 text-end">
@@ -184,7 +184,7 @@
                   </div>
                 </div>
 
-                <!-- photo / note -->
+                <!-- note -->
                 <div class="row mt-2">
                   <div class="col-6">
                     <div class="form-floating"></div>
@@ -247,24 +247,27 @@
                 <!-- buttons -->
                 <div class="row mt-2">
                   <div class="col-4 text-start">
-                    <button type="reset" class="btn fw-bold btn-clear">
+                    <button
+                      class="btn fw-bold btn-clear"
+                      onclick="refreshItemForm()"
+                    >
                       <i class="fa-solid fa-recycle me-2"></i>Clear
                     </button>
                   </div>
                   <div class="col-8 text-end">
-                    <button
+                    <!-- <button
                       type="submit"
                       class="btn me-2 fw-bold btn-update"
                       onclick="buttonEmployeeUpdate()"
-                      id="btnEmpUpdate"
+                      id="btnUpdate"
                     >
                       <i class="fa-solid fa-gears me-2"></i>Update
-                    </button>
+                    </button> -->
                     <button
                       type="submit"
                       class="btn fw-bold btn-add"
-                      onclick="addEmployee()"
-                      id="btnEmpSave"
+                      onclick="submitItemForm()"
+                      id="btnSave"
                     >
                       <i class="fa-solid fa-square-plus me-2"></i>Add
                     </button>

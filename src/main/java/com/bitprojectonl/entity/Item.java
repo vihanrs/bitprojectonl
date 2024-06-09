@@ -1,7 +1,6 @@
 package com.bitprojectonl.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.validator.constraints.Length;
@@ -101,12 +100,14 @@ public class Item {
     @Column(name = "delete_user")
     private Integer delete_user;
 
-    public Item(Integer id,String itemcode,String itemname,BigDecimal salesprice,BigDecimal purchaseprice,ItemStatus itemstatus_id){
+    public Item(Integer id,String itemcode,String itemname,BigDecimal salesprice,BigDecimal purchaseprice,ItemStatus itemstatus_id,User added_user_id,Integer delete_user){
         this.id = id;
         this.itemcode = itemcode;
         this.itemname = itemname;
         this.salesprice = salesprice;
         this.purchaseprice = purchaseprice;
         this.itemstatus_id = itemstatus_id;
+        this.added_user_id = added_user_id;
+        this.delete_user = delete_user;
     }
 }

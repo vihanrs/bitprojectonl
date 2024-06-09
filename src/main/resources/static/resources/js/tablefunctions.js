@@ -113,6 +113,14 @@ const fillDataIntoTable2 = (
         } else {
           td.innerText = dataList[ind][itemOb.property];
         }
+      } else if (itemOb.datatype == "currency") {
+        if (dataList[ind][itemOb.property] == null) {
+          td.innerText = "-";
+        } else {
+          td.innerHTML =
+            "<b>Rs. </b>" +
+            parseFloat(dataList[ind][itemOb.property]).toFixed(2);
+        }
       } else if (itemOb.datatype == "function") {
         td.innerHTML = itemOb.property(dataList[ind]);
       }

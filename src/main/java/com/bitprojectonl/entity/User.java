@@ -64,4 +64,9 @@ public class User {
 	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(name = "user_has_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
+	
+	public User(Integer id,String userName) {
+		this.id = id;
+		this.userName = userName;
+	}
 }

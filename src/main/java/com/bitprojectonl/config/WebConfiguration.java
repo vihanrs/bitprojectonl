@@ -29,7 +29,7 @@ public class WebConfiguration {
 		})
 		//login form detail
 		.formLogin(login->{login.loginPage("/login")
-			.defaultSuccessUrl("/index",true)
+			.defaultSuccessUrl("/dashboard",true)
 			.failureUrl("/login?error=usernamepassworderror")
 			.usernameParameter("userName")
 			.passwordParameter("password");

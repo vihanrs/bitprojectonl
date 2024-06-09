@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bitprojectonl.dao.EmployeeStatusDao;
 import com.bitprojectonl.dao.ItemStatusDao;
-import com.bitprojectonl.entity.EmployeeStatus;
 import com.bitprojectonl.entity.ItemStatus;
 
 @RestController

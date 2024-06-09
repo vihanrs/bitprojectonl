@@ -23,7 +23,7 @@ public class LoginController {
 		return errornView;
 	}
 
-	@GetMapping(value = "/index")
+	@GetMapping(value = "/dashboard")
 	public ModelAndView indexUI() {
 		
 		//get loged user authentication object

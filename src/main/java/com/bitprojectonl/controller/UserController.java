@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -122,6 +123,7 @@ public class UserController {
 		}
 	}
 
+	// create update mapping for update user account [/user]
 	@PutMapping
 	public String updateUser(@RequestBody User user) {
 		// check logged user authentication and authorization
@@ -171,4 +173,9 @@ public class UserController {
 		}
 	}
 
+	//create function for get user by id
+	@GetMapping(value = "/byid/{id}",produces = "application/json")
+	public User getUserByUserId(@PathVariable("id") Integer id) {
+		return userDao.getById(id);
+	}
 }
